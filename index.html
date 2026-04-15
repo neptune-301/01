@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>⚓COVE: THE ISOLATED</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Noto+Serif+KR:wght@300;400;700&family=Nanum+Myeongjo:wght@400;700&family=Orbitron:wght@400;700;900&family=Gowun+Dodum&family=Do+Hyeon&family=Hahmlet:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Noto+Serif+KR:wght@300;400;700&family=Nanum+Myeongjo:wght@400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -150,6 +150,9 @@
         #display-main { white-space: pre-wrap; margin-bottom: 20px; text-align: center; word-break: keep-all; z-index: 2; color: #fff; width: 100%; }
         .footer-area { position: relative; width: 100%; text-align: center; font-size: 0.85rem; letter-spacing: 2px; z-index: 2; font-family: 'Orbitron', 'Noto Sans KR', sans-serif; opacity: 0.8; }
         .footer-char { font-weight: 900; }
+
+        /* 공통 하단 저작권 푸터 */
+        .page-footer { margin-top: 50px; margin-bottom: 30px; font-size: 11px; color: #555; text-align: right; letter-spacing: 1px; font-family: 'Orbitron', monospace; }
 
         @media (max-width: 768px) {
             .grid-cards { grid-template-columns: 1fr; }
@@ -327,7 +330,7 @@
                 </div>
             </div>
 
-            <div style="margin-top:20px;font-size:10px;color:#444;text-align:right;letter-spacing:1px;">LOG_END // NO_RECORDS_LEFT // DATA_ENCRYPTED</div>
+            <div class="page-footer">COVE ⓒ 2026 · All rights reserved</div>
         </div>
     </main>
 
@@ -394,13 +397,15 @@
             <div class="grid-cards">
                 <div class="card" style="background:#111;">
                     <h4>■ INTRO</h4>
-                    <p>당신은 포트의 어느 부둣가에서 사인을 마주합니다.<br>어차피 스쳐 지나갈 인연인 줄만 알았건만, 가벼운 사건에 휘말릴 뻔한 당신을 그가 도와주면서 본격적인 인연이 시작됩니다.</p>
+                    <p>{{user}}는 포트의 어느 부둣가에서 사인을 마주합니다.<br>어차피 스쳐 지나갈 인연인 줄만 알았건만, 가벼운 사건에 휘말릴 뻔한 {{user}}를 그가 도와주면서 본격적인 인연이 시작됩니다.</p>
                 </div>
                 <div class="card" style="background:#111;">
                     <h4>■ CREATOR COMMENT</h4>
                     <p>언제나 공무 수행에 찌들어 있는, 피곤한 샐러리맨입니다.<br>처음엔 상당히 무신경하고 거리를 두지만, 마음을 연다면 츤데레가 될 수 있어요.<br><br><i><span class="animate__animated animate__bounce animate__infinite" style="display:inline-block; animation-duration: 2s;">⚓</span>대화 시, 사인은 상당히 무심해서 접점을 만드는 것이 영 쉽지 않을 수 있습니다. 그럴 때는 OOC를 적극 활용해 보시는 쪽도 추천드려요!</i></p>
                 </div>
             </div>
+
+            <div class="page-footer">COVE ⓒ 2026 · All rights reserved</div>
         </div>
     </main>
 
