@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>⚓COVE: THE ISOLATED</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Noto+Serif+KR:wght@300;400;700&family=Nanum+Myeongjo:wght@400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Noto+Serif+KR:wght@300;400;700&family=Nanum+Myeongjo:wght@400;700&family=Orbitron:wght@400;700;900&family=Gowun+Dodum&family=Do+Hyeon&family=Hahmlet:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -95,7 +95,6 @@
         .w-banner-img { flex: 1 1 280px; min-width: 280px; aspect-ratio: 16/9; border: 1px solid var(--border-light); overflow: hidden; background: #111; }
         .w-banner-text { flex: 1 1 280px; min-width: 280px; border-top: 3px solid var(--neon-blue); border-bottom: 3px solid var(--neon-blue); display: flex; flex-direction: column; justify-content: center; text-align: center; padding: 10px; background: #050505; }
 
-        /* 2단 병렬 그리드 설정 */
         .grid-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .card { border: 1px solid var(--border-light); padding: 15px; background: rgba(255,255,255,0.02); }
         .card h4 { color: #eee; font-size: 16px; margin-bottom: 8px; }
@@ -152,7 +151,6 @@
         .footer-area { position: relative; width: 100%; text-align: center; font-size: 0.85rem; letter-spacing: 2px; z-index: 2; font-family: 'Orbitron', 'Noto Sans KR', sans-serif; opacity: 0.8; }
         .footer-char { font-weight: 900; }
 
-        /* 모바일 대응 (반응형 1단) */
         @media (max-width: 768px) {
             .grid-cards { grid-template-columns: 1fr; }
             .w-banner { flex-direction: column; }
@@ -409,7 +407,7 @@
     <main id="view-log" class="view-section active">
         <aside class="sidebar">
             <div class="control-group">
-                <label>QUOTE CONTENT (발췌 내용)</label>
+                <label>CONTENTS (내용)</label>
                 <textarea id="in-text" oninput="updatePreview()" onfocus="clearDefaultQuote(this)" onblur="restoreDefaultQuote(this)">“죽음은 뉴스가 아니고, 
 사람은 떠나지 않는다.”</textarea>
             </div>
@@ -450,6 +448,19 @@
                         <option value="COVE_C_YELLOW_B.png" data-color="#ffffff">C - YELLOW (D)</option>
                         <option value="COVE_C_YELLOW_W.png" data-color="#121215">C - YELLOW (L)</option>
                     </optgroup>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label>TYPOGRAPHY (서체)</label>
+                <select id="in-font" onchange="updateTypography()">
+                    <option value="'Noto Sans KR', sans-serif" selected>Noto Sans (기본 고딕)</option>
+                    <option value="'Noto Serif KR', serif">Noto Serif (명조)</option>
+                    <option value="'Nanum Myeongjo', serif">나눔명조</option>
+                    <option value="'Hahmlet', serif">함초롬바탕 (Hahmlet)</option>
+                    <option value="'Pretendard', sans-serif">Pretendard</option>
+                    <option value="'Gowun Dodum', sans-serif">고운돋움</option>
+                    <option value="'Do Hyeon', sans-serif">도현 (굵은 제목형)</option>
                 </select>
             </div>
             
@@ -510,6 +521,11 @@
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`view-${viewName}`).classList.add('active');
             event.currentTarget.classList.add('active');
+            
+            // 탭 이동 시 Roster 화면을 초기(리스트) 상태로 되돌림
+            if (viewName === 'roster') {
+                hideProfile();
+            }
         }
 
         /* Roster Toggle Logic */
@@ -553,9 +569,9 @@
         let state = { size: 32, lineHeight: 1.6, letterSpacing: -1.0, align: 'center' };
         const els = {
             mainIn: document.getElementById('in-text'), charIn: document.getElementById('in-char'),
-            themeIn: document.getElementById('in-theme'), mainOut: document.getElementById('display-main'),
-            charOut: document.getElementById('display-char'), capture: document.getElementById('capture-area'),
-            footer: document.getElementById('footer-area')
+            themeIn: document.getElementById('in-theme'), fontIn: document.getElementById('in-font'),
+            mainOut: document.getElementById('display-main'), charOut: document.getElementById('display-char'), 
+            capture: document.getElementById('capture-area'), footer: document.getElementById('footer-area')
         };
 
         function updatePreview() {
@@ -584,6 +600,7 @@
         }
 
         function updateTypography() {
+            els.mainOut.style.fontFamily = els.fontIn.value;
             els.mainOut.style.fontSize = `${state.size}px`;
             els.mainOut.style.lineHeight = state.lineHeight;
             els.mainOut.style.letterSpacing = `${state.letterSpacing}px`;
