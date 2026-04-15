@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COVE: SYSTEM TERMINAL</title>
+    <title>⚓COVE: THE ISOLATED</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Noto+Serif+KR:wght@300;400;700&family=Nanum+Myeongjo:wght@400;700&family=Orbitron:wght@400;700;900&family=Gowun+Dodum&family=Do+Hyeon&family=Hahmlet:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -63,14 +63,6 @@
         }
         .boot-text { font-size: 1.2rem; text-shadow: 0 0 10px var(--neon-blue); line-height: 2; text-align: center;}
         .glitch-anim { animation: glitch 0.2s infinite; }
-        @keyframes glitch {
-            0% { transform: translate(0) }
-            20% { transform: translate(-2px, 2px) }
-            40% { transform: translate(-2px, -2px) }
-            60% { transform: translate(2px, 2px) }
-            80% { transform: translate(2px, -2px) }
-            100% { transform: translate(0) }
-        }
 
         header {
             display: flex;
@@ -113,99 +105,46 @@
             background: var(--neon-blue); transition: all 0.3s; z-index: -1;
         }
         .nav-btn.active, .nav-btn:hover {
-            border-color: var(--neon-blue);
-            color: #000;
-            box-shadow: 0 0 10px var(--neon-blue);
+            border-color: var(--neon-blue); color: #000; box-shadow: 0 0 10px var(--neon-blue);
         }
         .nav-btn.active::before, .nav-btn:hover::before { left: 0; }
 
         .view-section {
-            display: none;
-            flex: 1;
-            overflow: hidden;
-            animation: fadeIn 0.4s ease-out;
+            display: none; flex: 1; overflow: hidden; animation: fadeIn 0.4s ease-out;
         }
         .view-section.active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        #view-archive {
-            padding: 40px;
-            overflow-y: auto;
-            justify-content: center;
-        }
-        .archive-container {
-            max-width: 1000px;
-            width: 100%;
-            margin: 0 auto;
-        }
+        #view-archive { padding: 40px; overflow-y: auto; justify-content: center; }
+        .archive-container { max-width: 1000px; width: 100%; margin: 0 auto; }
+        
         .lore-card {
-            background: var(--bg-panel);
-            border: 1px solid var(--border);
-            border-left: 4px solid var(--neon-blue);
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            transition: 0.3s;
+            background: var(--bg-panel); border: 1px solid var(--border); border-left: 4px solid var(--neon-blue);
+            padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: 0.3s;
         }
         .lore-card:hover { border-color: var(--neon-blue); box-shadow: 0 0 15px var(--neon-dim); }
         .lore-card h2 {
-            font-family: 'Orbitron', sans-serif;
-            color: var(--neon-blue);
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif; color: var(--neon-blue); font-size: 1.2rem;
+            margin-bottom: 15px; letter-spacing: 1px; text-transform: uppercase;
         }
         .lore-card.danger { border-left-color: var(--neon-alert); }
         .lore-card.danger h2 { color: var(--neon-alert); }
         .lore-card p { margin-bottom: 12px; line-height: 1.7; font-size: 0.95rem; }
         .lore-card b { color: #fff; }
+        .lore-card .tagline { color: var(--neon-blue); font-style: italic; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
 
         .sidebar {
-            width: 400px;
-            background: var(--bg-panel);
-            border-right: 1px solid var(--neon-blue);
-            padding: 30px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            box-shadow: 5px 0 15px var(--neon-dim);
+            width: 400px; background: var(--bg-panel); border-right: 1px solid var(--neon-blue);
+            padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;
         }
-
         .control-group { display: flex; flex-direction: column; gap: 8px; }
         .control-group label { font-size: 0.8rem; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 1px; }
         
         textarea, input, select {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 12px;
-            border-radius: 2px;
-            font-family: inherit;
-            font-size: 0.9rem;
-            transition: 0.3s;
+            background: rgba(0,0,0,0.5); border: 1px solid var(--border); color: var(--text-main);
+            padding: 12px; border-radius: 2px; font-family: inherit; font-size: 0.9rem;
         }
-        textarea:focus, input:focus, select:focus {
-            outline: none;
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 8px var(--neon-dim);
-        }
+        textarea:focus, input:focus, select:focus { outline: none; border-color: var(--neon-blue); }
         textarea { resize: vertical; min-height: 100px; }
-
-        .flex-row { display: flex; gap: 15px; align-items: center; }
-        .btn-small {
-            background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue);
-            padding: 4px 10px; font-size: 0.75rem; cursor: pointer; transition: 0.2s; text-transform: uppercase;
-        }
-        .btn-small:hover { background: var(--neon-blue); color: #000; }
-
-        .btn-group { display: flex; gap: 5px; width: 100%; }
-        .toggle-btn {
-            flex: 1; background: transparent; border: 1px solid var(--border); color: var(--text-muted);
-            padding: 8px; cursor: pointer; font-size: 0.8rem; transition: 0.2s;
-        }
-        .toggle-btn.active { background: var(--neon-dim); border-color: var(--neon-blue); color: var(--neon-blue); }
 
         .number-adjust {
             display: flex; align-items: center; justify-content: space-between;
@@ -213,56 +152,35 @@
         }
         .number-adjust button {
             background: transparent; border: none; color: var(--neon-blue);
-            width: 30px; height: 30px; cursor: pointer; font-size: 1.2rem; transition: 0.2s;
+            width: 30px; height: 30px; cursor: pointer; font-size: 1.2rem;
         }
-        .number-adjust button:hover { background: var(--neon-dim); }
         .number-adjust span { font-size: 0.9rem; width: 40px; text-align: center; color: #fff;}
 
         .btn-action {
             background: var(--neon-blue); color: #000; border: none; padding: 16px;
             font-weight: 900; font-family: 'Orbitron', sans-serif; letter-spacing: 2px;
-            cursor: pointer; margin-top: 10px; transition: 0.3s; box-shadow: 0 0 10px var(--neon-dim);
+            cursor: pointer; margin-top: 10px; transition: 0.3s;
         }
-        .btn-action:hover { box-shadow: 0 0 20px var(--neon-blue); transform: translateY(-2px); }
 
-        .preview-container {
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            background: transparent; padding: 40px; position: relative; overflow: auto;
-        }
-        .canvas-wrapper {
-            width: 800px; aspect-ratio: 1/1;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            position: relative;
-        }
+        .preview-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px; overflow: auto; }
+        .canvas-wrapper { width: 800px; aspect-ratio: 1/1; box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; }
         #capture-area {
-            width: 100%; height: 100%;
-            background-size: cover; background-position: center;
+            width: 100%; height: 100%; background-size: cover; background-position: center;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             padding: 80px; position: relative;
         }
-        #display-main {
-            white-space: pre-wrap; margin-bottom: 20px; text-align: center; word-break: keep-all;
-            z-index: 2; color: #fff;
-        }
+        #display-main { white-space: pre-wrap; margin-bottom: 20px; text-align: center; word-break: keep-all; z-index: 2; color: #fff; }
         .footer-area {
-            position: relative; width: 100%; text-align: center;
-            font-size: 0.85rem; letter-spacing: 2px; z-index: 2; font-family: 'Orbitron', 'Noto Sans KR', sans-serif;
-            opacity: 0.8;
+            position: relative; width: 100%; text-align: center; font-size: 0.85rem; letter-spacing: 2px;
+            z-index: 2; font-family: 'Orbitron', 'Noto Sans KR', sans-serif; opacity: 0.8;
         }
-        .footer-world { font-weight: 300; }
         .footer-char { font-weight: 900; }
     </style>
 </head>
 <body>
-
     <div class="scanlines"></div>
-
     <div id="boot-screen">
-        <div class="boot-text glitch-anim" id="boot-text">
-            > INITIATING COVE PROTOCOL...<br>
-            > ESTABLISHING SECURE CONNECTION...<br>
-            > DECRYPTING ARCHIVE...
-        </div>
+        <div class="boot-text" id="boot-text">> INITIATING COVE PROTOCOL...<br>> ESTABLISHING SECURE CONNECTION...<br>> DECRYPTING ARCHIVE...</div>
     </div>
 
     <header>
@@ -279,26 +197,47 @@
                 <h2>■ OVERVIEW: 개요</h2>
                 <p><b>코브(Cove)</b>는 국제 협약에 의해 지정된 이능력 감염자 격리 도시입니다.</p>
                 <p>면적은 약 3~4km²에 불과하지만 인구 밀도는 매우 높으며, 항구를 중심으로 형성된 해안 도시입니다. 비가 잦고 공기는 늘 습기를 머금고 있으며, 안개가 골목을 잠식합니다.</p>
-                <br>
-                <p style="color: var(--neon-blue); font-style: italic;">"이곳은 감옥이 아닙니다.<br>떠날 수 없는 곳이 아니라, 떠나지 않는 곳입니다."</p>
+                <p>코브는 감옥이 아닙니다. 떠날 수 없는 곳이 아니라, 떠나지 않는 곳입니다.</p>
+                <div class="tagline">코브 : COVE ― 죽음은 뉴스가 아니고, 사람은 떠나지 않는다.</div>
             </div>
 
             <div class="lore-card">
-                <h2>■ THE MARK: 마크와 흔적</h2>
-                <p>이능력 바이러스의 공식 명칭은 <b>마크(Mark)</b>입니다. 코브 내부에서는 이를 <b>흔적</b>이라고 부릅니다.</p>
-                <p>마크는 21년 전 전 세계에서 최초 발생하였습니다. 감염 즉시 능력이 발현되며, 감염자는 국제 협약에 따라 코브로 강제 이송됩니다. 감염성은 5년간 유지되며 이후 전염성은 사라지나 능력은 평생 유지됩니다.</p>
-                <p>코브에는 비능력자가 존재하지 않습니다.</p>
+                <h2>■ MARK: 마크와 흔적</h2>
+                <p>이능력 바이러스의 공식 명칭은 <b>마크(Mark)</b>이며, 코브 내부에서는 이를 <b>흔적</b>이라고 부릅니다.</p>
+                <p>21년 전 최초 발생한 이 바이러스의 감염률은 약 0.001%입니다. 감염 즉시 능력이 발현되며, 국제 협약에 따라 코브로 강제 이송됩니다. 감염성은 5년간 유지된 후 사라지지만, 능력은 평생 유지됩니다. 현재 치료제는 존재하지 않습니다.</p>
+                <p>코브에는 비능력자가 존재하지 않으며, 능력이 없는 자는 출입할 수 없습니다.</p>
             </div>
 
             <div class="lore-card">
-                <h2>■ ORGANIZATIONS: 주요 조직</h2>
-                <p><b>[OFFICE] 오피스:</b> 실질 통치 집단. 질서 유지, 출국 승인, 대외 협상. (디렉터 > 카운슬러 > 오피서 > 스탭)</p>
-                <p><b>[CLINIC] 클리닉:</b> 의료 조직. 흔적 발현 완화 기술 및 약물 독점. (치프 > 닥터 > 어시스트)</p>
+                <h2>■ REGULATION: 5년 격리와 2세대</h2>
+                <p><b>[5년 격리 규정]</b> 감염자는 5년간 의무 격리를 거쳐야 하며, 이후 법적 출국이 가능합니다. 그러나 코스트 누적, 조직 계약, 외부 사회의 차별 등으로 인해 대부분 코브에 남습니다.</p>
+                <p><b>[2세대 능력자]</b> 코브 내에서 태어난 선천적 능력자들입니다. 2세대는 능력 출력이 더 강하며 폭주 시 위험도가 높습니다. 20세 전까지는 출국이 불가하며, 그들에게 코브는 격리 구역이 아닌 고향입니다.</p>
             </div>
-            
+
+            <div class="lore-card danger">
+                <h2>■ SYSTEM: 코스트와 폭주</h2>
+                <p><b>코스트(Cost):</b> 능력 사용 시 발생하는 '비용'입니다. 환청, 편두통, 기억 손실, 감정 결손 등 개인마다 다른 형태로 나타나며 완전히 제거할 수 없습니다. 주기적인 방출이 권장됩니다.</p>
+                <p><b>폭주(Berserk):</b> 출력 제한이 붕괴된 국지적 재난 상태입니다.</p>
+                <p><b>제압 & 고정:</b> 센터가 주도하는 물리적 '제압'과 앵커가 수행하는 감정 기반 안정화인 '고정'이 있습니다. 공식 앵커는 오피스를 통해 등록 가능합니다.</p>
+            </div>
+
             <div class="lore-card">
-                <h2>■ AREA: 구역 구조</h2>
-                <p><b>포트(Port):</b> 외부 연결 지대 / <b>하이브(Hive):</b> 고밀도 주거 구역 / <b>코어(Core):</b> 행정 중심 구역<br><b>로우(Low):</b> 위험한 슬럼 구역 / <b>언더(Under):</b> 클리닉 본 시설 위치</p>
+                <h2>■ CLASS & AREA: 등급과 구역</h2>
+                <p><b>위험 등급:</b> 폭주 시 피해 예측 및 통제 난이도에 따라 <b>S, A, B, C</b> 등급으로 산정됩니다.</p>
+                <p><b>구역 구조:</b><br>
+                - <b>포트(Port):</b> 외부 연결 항구 및 감시 시설<br>
+                - <b>하이브(Hive):</b> 인구 대부분이 거주하는 고밀도 주거 구역<br>
+                - <b>코어(Core):</b> 행정 중심 및 오피스 본부<br>
+                - <b>로우(Low):</b> 충돌과 폭주가 잦은 위험한 슬럼 구역<br>
+                - <b>언더(Under):</b> 클리닉 본 시설과 연구 구역이 위치한 지하</p>
+            </div>
+
+            <div class="lore-card">
+                <h2>■ ORGANIZATIONS: 네 조직</h2>
+                <p><b>[OFFICE] 오피스:</b> 실질 통치 집단. 질서 유지, 출국 승인, 등급 산정 담당.<br>(디렉터 > 카운슬러 > 오피서 > 스탭)</p>
+                <p><b>[CENTER] 센터:</b> 실행 조직. 채권 회수, 강제 집행, 폭주 제압 담당.<br>(헤드 > 캡틴 > 오퍼레이터 > 트레이니)</p>
+                <p><b>[CLINIC] 클리닉:</b> 의료 조직. 코스트 완화제 독점 및 안정화 연구.<br>(치프 > 닥터 > 어시스트)</p>
+                <p><b>[GARDEN] 가든:</b> 정보 거래소 및 장례 주관. 꽃을 통한 신호 거래 문화.<br>(키퍼 > 텐더)</p>
             </div>
         </div>
     </main>
@@ -306,21 +245,15 @@
     <main id="view-generator" class="view-section">
         <aside class="sidebar">
             <div class="control-group">
-                <div class="flex-row" style="justify-content: space-between;">
-                    <label>QUOTE CONTENT (발췌 내용)</label>
-                    <button class="btn-small" onclick="toggleQuotes()">" " ⇄ “ ”</button>
-                </div>
-                <textarea id="in-text" oninput="updatePreview()">“ 죽음은 뉴스가 아니고, 
-사람은 떠나지 않는다. ”</textarea>
+                <textarea id="in-text" oninput="updatePreview()">“죽음은 뉴스가 아니고, 
+사람은 떠나지 않는다.”</textarea>
             </div>
-
             <div class="control-group">
-                <label>CHARACTER NAME (캐릭터 명)</label>
+                <label>CHARACTER NAME</label>
                 <input type="text" id="in-char" value="CHARACTER NAME" oninput="updatePreview()">
             </div>
-
             <div class="control-group">
-                <label>ENVIRONMENT (배경 테마)</label>
+                <label>ENVIRONMENT (배경)</label>
                 <select id="in-theme" onchange="updateTheme()">
                     <optgroup label="TYPE A">
                         <option value="COVE_A_BLUE.png" data-color="#ffffff">A - BLUE</option>
@@ -341,85 +274,40 @@
                     <optgroup label="TYPE C">
                         <option value="COVE_C_BLACK.png" data-color="#ffffff">C - BLACK</option>
                         <option value="COVE_C_WHITE.png" data-color="#121215">C - WHITE</option>
-                        <option value="COVE_C_BLUE_B.png" data-color="#ffffff">C - BLUE (Dark)</option>
-                        <option value="COVE_C_BLUE_W.png" data-color="#121215">C - BLUE (Light)</option>
-                        <option value="COVE_C_GREEN_B.png" data-color="#ffffff">C - GREEN (Dark)</option>
-                        <option value="COVE_C_GREEN_W.png" data-color="#121215">C - GREEN (Light)</option>
-                        <option value="COVE_C_RED_B.png" data-color="#ffffff">C - RED (Dark)</option>
-                        <option value="COVE_C_RED_W.png" data-color="#121215">C - RED (Light)</option>
-                        <option value="COVE_C_VIOLET_B.png" data-color="#ffffff">C - VIOLET (Dark)</option>
-                        <option value="COVE_C_VIOLET_W.png" data-color="#121215">C - VIOLET (Light)</option>
-                        <option value="COVE_C_YELLOW_B.png" data-color="#ffffff">C - YELLOW (Dark)</option>
-                        <option value="COVE_C_YELLOW_W.png" data-color="#121215">C - YELLOW (Light)</option>
+                        <option value="COVE_C_BLUE_B.png" data-color="#ffffff">C - BLUE (D)</option>
+                        <option value="COVE_C_BLUE_W.png" data-color="#121215">C - BLUE (L)</option>
+                        <option value="COVE_C_GREEN_B.png" data-color="#ffffff">C - GREEN (D)</option>
+                        <option value="COVE_C_GREEN_W.png" data-color="#121215">C - GREEN (L)</option>
+                        <option value="COVE_C_RED_B.png" data-color="#ffffff">C - RED (D)</option>
+                        <option value="COVE_C_RED_W.png" data-color="#121215">C - RED (L)</option>
+                        <option value="COVE_C_VIOLET_B.png" data-color="#ffffff">C - VIOLET (D)</option>
+                        <option value="COVE_C_VIOLET_W.png" data-color="#121215">C - VIOLET (L)</option>
+                        <option value="COVE_C_YELLOW_B.png" data-color="#ffffff">C - YELLOW (D)</option>
+                        <option value="COVE_C_YELLOW_W.png" data-color="#121215">C - YELLOW (L)</option>
                     </optgroup>
                 </select>
             </div>
-
             <div class="control-group">
-                <label>TYPOGRAPHY (서체)</label>
-                <select id="in-font" onchange="updateTypography()">
-                    <option value="'Noto Sans KR', sans-serif" selected>Noto Sans (기본 고딕)</option>
-                    <option value="'Noto Serif KR', serif">Noto Serif (명조)</option>
-                    <option value="'Nanum Myeongjo', serif">나눔명조</option>
-                    <option value="'Hahmlet', serif">함초롬바탕 (Hahmlet)</option>
-                    <option value="'Pretendard', sans-serif">Pretendard</option>
-                    <option value="'Gowun Dodum', sans-serif">고운돋움</option>
-                    <option value="'Do Hyeon', sans-serif">도현 (굵은 제목형)</option>
-                </select>
-            </div>
-
-            <div class="flex-row">
-                <div class="control-group" style="flex:1;">
-                    <label>ALIGN (정렬)</label>
-                    <div class="btn-group" id="align-group">
-                        <button class="toggle-btn" onclick="setAlign('left', this)">좌측</button>
-                        <button class="toggle-btn active" onclick="setAlign('center', this)">중앙</button>
-                        <button class="toggle-btn" onclick="setAlign('right', this)">우측</button>
-                    </div>
-                </div>
-                <div class="control-group" style="flex:1;">
-                    <label>WRAP (줄바꿈)</label>
-                    <div class="btn-group" id="wrap-group">
-                        <button class="toggle-btn active" onclick="setWrap('keep-all', this)">단어</button>
-                        <button class="toggle-btn" onclick="setWrap('break-all', this)">글자</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <label>SIZE (크기)</label>
+                <label>FONT SIZE</label>
                 <div class="number-adjust">
-                    <button onclick="adjustVal('size', -2)">-</button>
-                    <span id="val-size">32</span>
-                    <button onclick="adjustVal('size', 2)">+</button>
-                </div>
-            </div>
-            <div class="control-group">
-                <label>LINE HEIGHT (줄 간격)</label>
-                <div class="number-adjust">
-                    <button onclick="adjustVal('lineHeight', -0.1)">-</button>
-                    <span id="val-lineHeight">1.6</span>
-                    <button onclick="adjustVal('lineHeight', 0.1)">+</button>
+                    <button onclick="adjustVal('size', -2)">-</button><span id="val-size">32</span><button onclick="adjustVal('size', 2)">+</button>
                 </div>
             </div>
             <div class="control-group">
                 <label>SPACING (자간)</label>
                 <div class="number-adjust">
-                    <button onclick="adjustVal('letterSpacing', -0.5)">-</button>
-                    <span id="val-letterSpacing">-1.0</span>
-                    <button onclick="adjustVal('letterSpacing', 0.5)">+</button>
+                    <button onclick="adjustVal('letterSpacing', -0.5)">-</button><span id="val-letterSpacing">-1.0</span><button onclick="adjustVal('letterSpacing', 0.5)">+</button>
                 </div>
             </div>
-
-            <button class="btn-action" id="btn-save" onclick="downloadImage()">> DOWNLOAD_IMG</button>
+            <button class="btn-action" onclick="downloadImage()">> DOWNLOAD_IMG</button>
         </aside>
 
         <section class="preview-container">
             <div class="canvas-wrapper">
                 <div id="capture-area" style="background-image: url('COVE_A_BLUE.png');">
-                    <div id="display-main">“ 죽음은 뉴스가 아니고, <br>사람은 떠나지 않는다. ”</div>
+                    <div id="display-main">“죽음은 뉴스가 아니고, <br>사람은 떠나지 않는다.”</div>
                     <div class="footer-area" id="footer-area">
-                        <span class="footer-world">COVE</span> | <span class="footer-char" id="display-char">CHARACTER NAME</span>
+                        COVE | <span class="footer-char" id="display-char">CHARACTER NAME</span>
                     </div>
                 </div>
             </div>
@@ -430,48 +318,23 @@
         setTimeout(() => {
             const bootText = document.getElementById('boot-text');
             bootText.innerHTML = "> ACCESS GRANTED.<br>> WELCOME TO COVE.";
-            bootText.classList.remove('glitch-anim');
-            setTimeout(() => {
-                document.getElementById('boot-screen').style.opacity = '0';
-                setTimeout(() => document.getElementById('boot-screen').style.display = 'none', 500);
-            }, 800);
+            setTimeout(() => document.getElementById('boot-screen').style.opacity = '0', 800);
         }, 1500);
 
         function switchView(viewName) {
             document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            
             document.getElementById(`view-${viewName}`).classList.add('active');
             event.currentTarget.classList.add('active');
         }
 
-        let state = { size: 32, lineHeight: 1.6, letterSpacing: -1.0, align: 'center', wrap: 'keep-all' };
-        
+        let state = { size: 32, lineHeight: 1.6, letterSpacing: -1.0, align: 'center' };
         const els = {
-            mainIn: document.getElementById('in-text'),
-            charIn: document.getElementById('in-char'),
-            themeIn: document.getElementById('in-theme'),
-            fontIn: document.getElementById('in-font'),
-            mainOut: document.getElementById('display-main'),
-            charOut: document.getElementById('display-char'),
-            footerArea: document.getElementById('footer-area'),
-            capture: document.getElementById('capture-area')
+            mainIn: document.getElementById('in-text'), charIn: document.getElementById('in-char'),
+            themeIn: document.getElementById('in-theme'), mainOut: document.getElementById('display-main'),
+            charOut: document.getElementById('display-char'), capture: document.getElementById('capture-area'),
+            footer: document.getElementById('footer-area')
         };
-
-        function toggleQuotes() {
-            let text = els.mainIn.value;
-            if (/["']/.test(text)) {
-                text = text.replace(/"([^"]*)"/g, '“$1”').replace(/'([^']*)'/g, '‘$1’');
-                if(!/[“”‘’]/.test(text)) text = text.replace(/"/g, '”').replace(/'/g, '’');
-            } else if (/[“”‘’]/.test(text)) {
-                text = text.replace(/“([^”]*)”/g, '"$1"').replace(/‘([^’]*)’/g, "'$1'");
-                if(!/["']/.test(text)) text = text.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
-            } else {
-                text = `“ ${text} ”`;
-            }
-            els.mainIn.value = text;
-            updatePreview();
-        }
 
         function updatePreview() {
             els.mainOut.innerHTML = els.mainIn.value.replace(/\n/g, '<br>');
@@ -481,73 +344,31 @@
         function updateTheme() {
             const selected = els.themeIn.options[els.themeIn.selectedIndex];
             els.capture.style.backgroundImage = `url('${selected.value}')`;
-            
-            const textColor = selected.getAttribute('data-color');
-            els.mainOut.style.color = textColor;
-            els.footerArea.style.color = textColor;
-        }
-
-        function setAlign(val, btn) {
-            state.align = val;
-            document.querySelectorAll('#align-group .toggle-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            updateTypography();
-        }
-
-        function setWrap(val, btn) {
-            state.wrap = val;
-            document.querySelectorAll('#wrap-group .toggle-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            updateTypography();
+            els.mainOut.style.color = selected.getAttribute('data-color');
+            els.footer.style.color = selected.getAttribute('data-color');
         }
 
         function adjustVal(key, amount) {
             state[key] += amount;
-            if(key === 'size' && state[key] < 12) state[key] = 12;
-            if(key === 'lineHeight' && state[key] < 1) state[key] = 1;
-            
-            document.getElementById(`val-${key}`).textContent = key === 'size' ? state[key] : state[key].toFixed(1);
+            document.getElementById(`val-${key}`).textContent = state[key].toFixed(key === 'size' ? 0 : 1);
             updateTypography();
         }
 
         function updateTypography() {
-            els.mainOut.style.fontFamily = els.fontIn.value;
             els.mainOut.style.fontSize = `${state.size}px`;
-            els.mainOut.style.lineHeight = state.lineHeight;
             els.mainOut.style.letterSpacing = `${state.letterSpacing}px`;
-            els.mainOut.style.textAlign = state.align;
-            els.mainOut.style.wordBreak = state.wrap;
-
-            if(state.align === 'left') els.capture.style.alignItems = 'flex-start';
-            else if(state.align === 'right') els.capture.style.alignItems = 'flex-end';
-            else els.capture.style.alignItems = 'center';
-            
-            els.footerArea.style.textAlign = state.align;
         }
 
         function downloadImage() {
-            const btn = document.getElementById('btn-save');
-            btn.innerHTML = "> PROCESSING...";
-            btn.disabled = true;
-
-            html2canvas(els.capture, { scale: 2, useCORS: true, backgroundColor: null })
-            .then(canvas => {
+            html2canvas(els.capture, { scale: 2, useCORS: true }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `COVE_ARCHIVE_${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                btn.innerHTML = "> DOWNLOAD_IMG";
-                btn.disabled = false;
-            }).catch(err => {
-                alert("이미지 저장 실패. 이미지가 동일 폴더에 있는지 확인하세요.");
-                btn.innerHTML = "> DOWNLOAD_IMG";
-                btn.disabled = false;
             });
         }
 
-        updatePreview();
-        updateTheme();
-        updateTypography();
+        updatePreview(); updateTheme(); updateTypography();
     </script>
 </body>
 </html>
