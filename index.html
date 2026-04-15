@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COVE: SYSTEM TERMINAL</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;700&family=Nanum+Myeongjo:wght@400;700&family=Orbitron:wght@400;700;900&family=Gowun+Dodum&family=Do+Hyeon&family=Hahmlet:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --bg-base: #030305;
+            --bg-panel: rgba(10, 10, 15, 0.85);
+            --neon-blue: #00f3ff;
+            --neon-dim: rgba(0, 243, 255, 0.15);
+            --neon-alert: #ff0055;
+            --text-main: #e0fbfc;
+            --text-muted: #6b8a92;
+            --border: #1a2f33;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        /* CRT Scanline Overlay */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: var(--neon-blue); box-shadow: 0 0 5px var(--neon-blue); }
+
+        /* BOOT SEQUENCE ANIMATION */
+        #boot-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            transition: opacity 0.5s ease-out;
+        }
+        .boot-text { font-size: 1.2rem; text-shadow: 0 0 10px var(--neon-blue); line-height: 2; text-align: center;}
+        .glitch-anim { animation: glitch 0.2s infinite; }
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
+        /* HEADER / NAVIGATION */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            border-bottom: 1px solid var(--neon-blue);
+            background: var(--bg-panel);
+            box-shadow: 0 0 15px var(--neon-dim);
+            z-index: 10;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--neon-blue);
+            text-shadow: 0 0 8px var(--neon-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-buttons { display: flex; gap: 20px; }
+        .nav-btn {
+            font-family: 'Orbitron', sans-serif;
+            background: transparent;
+            border: 1px solid var(--text-muted);
+            color: var(--text-muted);
+            padding: 8px 24px;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .nav-btn::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: var(--neon-blue); transition: all 0.3s; z-index: -1;
+        }
+        .nav-btn.active, .nav-btn:hover {
+            border-color: var(--neon-blue);
+            color: #000;
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+        .nav-btn.active::before, .nav-btn:hover::before { left: 0; }
+
+        /* VIEW CONTAINERS */
+        .view-section {
+            display: none;
+            flex: 1;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .view-section.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ====== ARCHIVE VIEW ====== */
+        #view-archive {
+            padding: 40px;
+            overflow-y: auto;
+            justify-content: center;
+        }
+        .archive-container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .lore-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--neon-blue);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: 0.3s;
+        }
+        .lore-card:hover { border-color: var(--neon-blue); box-shadow: 0 0 15px var(--neon-dim); }
+        .lore-card h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .lore-card.danger { border-left-color: var(--neon-alert); }
+        .lore-card.danger h2 { color: var(--neon-alert); }
+        .lore-card p { margin-bottom: 12px; line-height: 1.7; font-size: 0.95rem; }
+        .lore-card b { color: #fff; }
+
+        /* ====== GENERATOR VIEW ====== */
+        .sidebar {
+            width: 400px;
+            background: var(--bg-panel);
+            border-right: 1px solid var(--neon-blue);
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 5px 0 15px var(--neon-dim);
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 8px; }
+        .control-group label { font-size: 0.8rem; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 1px; }
+        
+        textarea, input, select {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 2px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 8px var(--neon-dim);
+        }
+        textarea { resize: vertical; min-height: 100px; }
+
+        .flex-row { display: flex; gap: 15px; align-items: center; }
+        .btn-small {
+            background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue);
+            padding: 4px 10px; font-size: 0.75rem; cursor: pointer; transition: 0.2s; text-transform: uppercase;
+        }
+        .btn-small:hover { background: var(--neon-blue); color: #000; }
+
+        /* Toggle & Adjusters */
+        .btn-group { display: flex; gap: 5px; width: 100%; }
+        .toggle-btn {
+            flex: 1; background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+            padding: 8px; cursor: pointer; font-size: 0.8rem; transition: 0.2s;
+        }
+        .toggle-btn.active { background: var(--neon-dim); border-color: var(--neon-blue); color: var(--neon-blue); }
+
+        .number-adjust {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(0,0,0,0.5); border: 1px solid var(--border); padding: 4px;
+        }
+        .number-adjust button {
+            background: transparent; border: none; color: var(--neon-blue);
+            width: 30px; height: 30px; cursor: pointer; font-size: 1.2rem; transition: 0.2s;
+        }
+        .number-adjust button:hover { background: var(--neon-dim); }
+        .number-adjust span { font-size: 0.9rem; width: 40px; text-align: center; color: #fff;}
+
+        .btn-action {
+            background: var(--neon-blue); color: #000; border: none; padding: 16px;
+            font-weight: 900; font-family: 'Orbitron', sans-serif; letter-spacing: 2px;
+            cursor: pointer; margin-top: 10px; transition: 0.3s; box-shadow: 0 0 10px var(--neon-dim);
+        }
+        .btn-action:hover { box-shadow: 0 0 20px var(--neon-blue); transform: translateY(-2px); }
+
+        /* Preview Canvas Area */
+        .preview-container {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            background: transparent; padding: 40px; position: relative; overflow: auto;
+        }
+        .canvas-wrapper {
+            width: 800px; aspect-ratio: 1/1;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        #capture-area {
+            width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 100px; position: relative;
+        }
+        #display-main {
+            white-space: pre-wrap; margin-bottom: 50px; text-align: center; word-break: keep-all;
+            z-index: 2; color: #fff;
+        }
+        .footer-area {
+            position: absolute; bottom: 60px; width: 100%; text-align: center;
+            font-size: 0.9rem; letter-spacing: 2px; z-index: 2; font-family: 'Orbitron', 'Pretendard', sans-serif;
+        }
+        .footer-world { font-weight: 300; }
+        .footer-char { font-weight: 900; }
+    </style>
+</head>
+<body>
+
+    <div class="scanlines"></div>
+
+    <div id="boot-screen">
+        <div class="boot-text glitch-anim" id="boot-text">
+            > INITIATING COVE PROTOCOL...<br>
+            > ESTABLISHING SECURE CONNECTION...<br>
+            > DECRYPTING ARCHIVE...
+        </div>
+    </div>
+
+    <header>
+        <div class="logo">⚓ COVE_SYS //</div>
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="switchView('archive')">ARCHIVE</button>
+            <button class="nav-btn" onclick="switchView('generator')">QUOTE MAKER</button>
+        </div>
+    </header>
+
+    <main id="view-archive" class="view-section active">
+        <div class="archive-container">
+            <div class="lore-card">
+                <h2>■ OVERVIEW: 개요</h2>
+                <p><b>코브(Cove)</b>는 국제 협약에 의해 지정된 이능력 감염자 격리 도시입니다.</p>
+                <p>면적은 약 3~4km²에 불과하지만 인구 밀도는 매우 높으며, 항구를 중심으로 형성된 해안 도시입니다. 비가 잦고 공기는 늘 습기를 머금고 있으며, 안개가 골목을 잠식합니다.</p>
+                <br>
+                <p style="color: var(--neon-blue); font-style: italic;">"이곳은 감옥이 아닙니다.<br>떠날 수 없는 곳이 아니라, 떠나지 않는 곳입니다."</p>
+            </div>
+
+            <div class="lore-card">
+                <h2>■ THE MARK: 마크와 흔적</h2>
+                <p>이능력 바이러스의 공식 명칭은 <b>마크(Mark)</b>입니다. 코브 내부에서는 이를 <b>흔적</b>이라고 부릅니다.</p>
+                <p>마크는 21년 전 전 세계에서 최초 발생하였습니다. 감염 즉시 능력이 발현되며, 감염자는 국제 협약에 따라 코브로 강제 이송됩니다. 감염성은 5년간 유지되며 이후 전염성은 사라지나 능력은 평생 유지됩니다.</p>
+                <p>코브에는 비능력자가 존재하지 않습니다.</p>
+            </div>
+
+            <div class="lore-card danger">
+                <h2>■ SYSTEM: 코스트와 폭주</h2>
+                <p>능력 사용 시 반드시 <b>코스트(Cost)</b>가 발생합니다. 환청, 편두통, 감정 결손 등 다양한 형태로 나타나며 주기적인 방출이 필요합니다.</p>
+                <p><b>폭주</b>는 제한이 붕괴된 상태입니다.</p>
+                <p>- <b>제압 (Suppression):</b> 물리적 강제 리셋 (센터 주도)</p>
+                <p>- <b>고정 (Fixation):</b> 감정 기반 안정화 (스킨십 등)</p>
+                <p>- <b>앵커 (Anchor):</b> 고정을 수행하는 등록된 파트너</p>
+            </div>
+
+            <div class="lore-card">
+                <h2>■ ORGANIZATIONS: 네 조직</h2>
+                <p><b>[OFFICE] 오피스:</b> 실질 통치 집단. 질서 유지, 출국 승인, 대외 협상. (디렉터 > 카운슬러 > 오피서 > 스탭)</p>
+                <p><b>[CENTER] 센터:</b> 실행 조직. 채권 회수, 강제 집행, 폭주 제압. (헤드 > 캡틴 > 오퍼레이터 > 트레이니)</p>
+                <p><b>[CLINIC] 클리닉:</b> 의료 조직. 코스트 완화 기술 및 약물 독점. (치프 > 닥터 > 어시스트)</p>
+                <p><b>[GARDEN] 가든:</b> 중립 정보 거래소 및 장례 주관. 꽃을 통한 정보 거래.</p>
+            </div>
+            
+            <div class="lore-card">
+                <h2>■ AREA: 구역 구조</h2>
+                <p><b>포트(Port):</b> 외부 연결 지대 / <b>하이브(Hive):</b> 고밀도 주거 구역 / <b>코어(Core):</b> 행정 중심 구역<br><b>로우(Low):</b> 위험한 슬럼 구역 / <b>언더(Under):</b> 클리닉 본 시설 위치</p>
+            </div>
+        </div>
+    </main>
+
+    <main id="view-generator" class="view-section">
+        <aside class="sidebar">
+            <div class="control-group">
+                <div class="flex-row" style="justify-content: space-between;">
+                    <label>QUOTE CONTENT (발췌 내용)</label>
+                    <button class="btn-small" onclick="toggleQuotes()">" " ⇄ “ ”</button>
+                </div>
+                <textarea id="in-text" oninput="updatePreview()">“ 죽음은 뉴스가 아니고, 
+사람은 떠나지 않는다. ”</textarea>
+            </div>
+
+            <div class="control-group">
+                <label>CHARACTER NAME (캐릭터 명)</label>
+                <input type="text" id="in-char" value="CHARACTER NAME" oninput="updatePreview()">
+            </div>
+
+            <div class="control-group">
+                <label>ENVIRONMENT (배경 테마)</label>
+                <select id="in-theme" onchange="updateTheme()">
+    <optgroup label="TYPE A">
+        <option value="COVE_A_BLUE.png" data-color="#ffffff">A - BLUE</option>
+        <option value="COVE_A_GREEN.png" data-color="#ffffff">A - GREEN</option>
+        <option value="COVE_A_PINK.png" data-color="#ffffff">A - PINK</option>
+        <option value="COVE_A_RED.png" data-color="#ffffff">A - RED</option>
+        <option value="COVE_A_VIOLET.png" data-color="#ffffff">A - VIOLET</option>
+        <option value="COVE_A_YELLOW.png" data-color="#ffffff">A - YELLOW</option>
+    </optgroup>
+
+    <optgroup label="TYPE B">
+        <option value="COVE_B_BLUE.png" data-color="#ffffff">B - BLUE</option>
+        <option value="COVE_B_GREEN.png" data-color="#ffffff">B - GREEN</option>
+        <option value="COVE_B_PINK.png" data-color="#ffffff">B - PINK</option>
+        <option value="COVE_B_RED.png" data-color="#ffffff">B - RED</option>
+        <option value="COVE_B_VIOLET.png" data-color="#ffffff">B - VIOLET</option>
+        <option value="COVE_B_YELLOW.png" data-color="#ffffff">B - YELLOW</option>
+    </optgroup>
+
+    <optgroup label="TYPE C">
+        <option value="COVE_C_BLACK.png" data-color="#ffffff">C - BLACK</option>
+        <option value="COVE_C_WHITE.png" data-color="#121215">C - WHITE</option>
+        <option value="COVE_C_BLUE_B.png" data-color="#ffffff">C - BLUE (Dark)</option>
+        <option value="COVE_C_BLUE_W.png" data-color="#121215">C - BLUE (Light)</option>
+        <option value="COVE_C_GREEN_B.png" data-color="#ffffff">C - GREEN (Dark)</option>
+        <option value="COVE_C_GREEN_W.png" data-color="#121215">C - GREEN (Light)</option>
+        <option value="COVE_C_RED_B.png" data-color="#ffffff">C - RED (Dark)</option>
+        <option value="COVE_C_RED_W.png" data-color="#121215">C - RED (Light)</option>
+        <option value="COVE_C_VIOLET_B.png" data-color="#ffffff">C - VIOLET (Dark)</option>
+        <option value="COVE_C_VIOLET_W.png" data-color="#121215">C - VIOLET (Light)</option>
+        <option value="COVE_C_YELLOW_B.png" data-color="#ffffff">C - YELLOW (Dark)</option>
+        <option value="COVE_C_YELLOW_W.png" data-color="#121215">C - YELLOW (Light)</option>
+    </optgroup>
+</select>
+
+            <div class="control-group">
+                <label>TYPOGRAPHY (서체)</label>
+                <select id="in-font" onchange="updateTypography()">
+                    <option value="'Noto Serif KR', serif" selected>Noto Serif (명조 기본)</option>
+                    <option value="'Nanum Myeongjo', serif">나눔명조</option>
+                    <option value="'Hahmlet', serif">함초롬바탕 (Hahmlet)</option>
+                    <option value="'Pretendard', sans-serif">Pretendard (고딕)</option>
+                    <option value="'Gowun Dodum', sans-serif">고운돋움</option>
+                    <option value="'Do Hyeon', sans-serif">도현 (굵은 제목형)</option>
+                </select>
+            </div>
+
+            <div class="flex-row">
+                <div class="control-group" style="flex:1;">
+                    <label>ALIGN (정렬)</label>
+                    <div class="btn-group" id="align-group">
+                        <button class="toggle-btn" onclick="setAlign('left', this)">좌측</button>
+                        <button class="toggle-btn active" onclick="setAlign('center', this)">중앙</button>
+                        <button class="toggle-btn" onclick="setAlign('right', this)">우측</button>
+                    </div>
+                </div>
+                <div class="control-group" style="flex:1;">
+                    <label>WRAP (줄바꿈)</label>
+                    <div class="btn-group" id="wrap-group">
+                        <button class="toggle-btn active" onclick="setWrap('keep-all', this)">단어</button>
+                        <button class="toggle-btn" onclick="setWrap('break-all', this)">글자</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>SIZE (크기)</label>
+                <div class="number-adjust">
+                    <button onclick="adjustVal('size', -2)">-</button>
+                    <span id="val-size">40</span>
+                    <button onclick="adjustVal('size', 2)">+</button>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>LINE HEIGHT (줄 간격)</label>
+                <div class="number-adjust">
+                    <button onclick="adjustVal('lineHeight', -0.1)">-</button>
+                    <span id="val-lineHeight">1.6</span>
+                    <button onclick="adjustVal('lineHeight', 0.1)">+</button>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>SPACING (자간)</label>
+                <div class="number-adjust">
+                    <button onclick="adjustVal('letterSpacing', -0.5)">-</button>
+                    <span id="val-letterSpacing">0.0</span>
+                    <button onclick="adjustVal('letterSpacing', 0.5)">+</button>
+                </div>
+            </div>
+
+            <button class="btn-action" id="btn-save" onclick="downloadImage()">> DOWNLOAD_IMG</button>
+        </aside>
+
+        <section class="preview-container">
+            <div class="canvas-wrapper">
+                <div id="capture-area" style="background-image: url('KakaoTalk_20260415_203431641_02.png');">
+                    <div id="display-main">“ 죽음은 뉴스가 아니고, <br>사람은 떠나지 않는다. ”</div>
+                    <div class="footer-area" id="footer-area">
+                        <span class="footer-world">COVE</span> | <span class="footer-char" id="display-char">CHARACTER NAME</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- BOOT SEQUENCE LOGIC ---
+        setTimeout(() => {
+            const bootText = document.getElementById('boot-text');
+            bootText.innerHTML = "> ACCESS GRANTED.<br>> WELCOME TO COVE.";
+            bootText.classList.remove('glitch-anim');
+            setTimeout(() => {
+                document.getElementById('boot-screen').style.opacity = '0';
+                setTimeout(() => document.getElementById('boot-screen').style.display = 'none', 500);
+            }, 800);
+        }, 1500);
+
+        // --- NAVIGATION LOGIC ---
+        function switchView(viewName) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(`view-${viewName}`).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // --- GENERATOR LOGIC ---
+        let state = { size: 40, lineHeight: 1.6, letterSpacing: 0, align: 'center', wrap: 'keep-all' };
+        
+        const els = {
+            mainIn: document.getElementById('in-text'),
+            charIn: document.getElementById('in-char'),
+            themeIn: document.getElementById('in-theme'),
+            fontIn: document.getElementById('in-font'),
+            mainOut: document.getElementById('display-main'),
+            charOut: document.getElementById('display-char'),
+            footerArea: document.getElementById('footer-area'),
+            capture: document.getElementById('capture-area')
+        };
+
+        function toggleQuotes() {
+            let text = els.mainIn.value;
+            if (/["']/.test(text)) {
+                text = text.replace(/"([^"]*)"/g, '“$1”').replace(/'([^']*)'/g, '‘$1’');
+                if(!/[“”‘’]/.test(text)) text = text.replace(/"/g, '”').replace(/'/g, '’');
+            } else if (/[“”‘’]/.test(text)) {
+                text = text.replace(/“([^”]*)”/g, '"$1"').replace(/‘([^’]*)’/g, "'$1'");
+                if(!/["']/.test(text)) text = text.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
+            } else {
+                text = `“ ${text} ”`;
+            }
+            els.mainIn.value = text;
+            updatePreview();
+        }
+
+        function updatePreview() {
+            els.mainOut.innerHTML = els.mainIn.value.replace(/\n/g, '<br>');
+            els.charOut.textContent = els.charIn.value.trim() || 'CHARACTER NAME';
+        }
+
+        function updateTheme() {
+            const selected = els.themeIn.options[els.themeIn.selectedIndex];
+            els.capture.style.backgroundImage = `url('${selected.value}')`;
+            
+            const textColor = selected.getAttribute('data-color');
+            els.mainOut.style.color = textColor;
+            els.footerArea.style.color = textColor;
+        }
+
+        function setAlign(val, btn) {
+            state.align = val;
+            document.querySelectorAll('#align-group .toggle-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateTypography();
+        }
+
+        function setWrap(val, btn) {
+            state.wrap = val;
+            document.querySelectorAll('#wrap-group .toggle-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateTypography();
+        }
+
+        function adjustVal(key, amount) {
+            state[key] += amount;
+            if(key === 'size' && state[key] < 12) state[key] = 12;
+            if(key === 'lineHeight' && state[key] < 1) state[key] = 1;
+            
+            document.getElementById(`val-${key}`).textContent = key === 'size' ? state[key] : state[key].toFixed(1);
+            updateTypography();
+        }
+
+        function updateTypography() {
+            els.mainOut.style.fontFamily = els.fontIn.value;
+            els.mainOut.style.fontSize = `${state.size}px`;
+            els.mainOut.style.lineHeight = state.lineHeight;
+            els.mainOut.style.letterSpacing = `${state.letterSpacing}px`;
+            els.mainOut.style.textAlign = state.align;
+            els.mainOut.style.wordBreak = state.wrap;
+
+            if(state.align === 'left') els.capture.style.alignItems = 'flex-start';
+            else if(state.align === 'right') els.capture.style.alignItems = 'flex-end';
+            else els.capture.style.alignItems = 'center';
+        }
+
+        function downloadImage() {
+            const btn = document.getElementById('btn-save');
+            btn.innerHTML = "> PROCESSING...";
+            btn.disabled = true;
+
+            html2canvas(els.capture, { scale: 2, useCORS: true, backgroundColor: null })
+            .then(canvas => {
+                const link = document.createElement('a');
+                link.download = `COVE_ARCHIVE_${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                btn.innerHTML = "> DOWNLOAD_IMG";
+                btn.disabled = false;
+            }).catch(err => {
+                alert("이미지 저장 실패. 배경 이미지가 동일 폴더에 있는지 확인하세요.");
+                btn.innerHTML = "> DOWNLOAD_IMG";
+                btn.disabled = false;
+            });
+        }
+
+        // Initialize
+        updatePreview();
+        updateTheme();
+        updateTypography();
+    </script>
+</body>
+</html>
