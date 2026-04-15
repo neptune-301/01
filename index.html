@@ -5,10 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>⚓COVE: THE ISOLATED</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Noto+Serif+KR:wght@300;400;700&family=Nanum+Myeongjo:wght@400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gowun+Dodum&family=Hahmlet:wght@300;400;700&family=Nanum+Myeongjo:wght@400;700&family=Noto+Sans+KR:wght@300;400;700;900&family=Noto+Serif+KR:wght@300;400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
+        /* KoPub 폰트 불러오기 */
+        @import url('https://webfontworld.github.io/kopub/KoPubDotum.css');
+        @import url('https://webfontworld.github.io/kopub/KoPubBatang.css');
+
         :root {
             --bg-base: #000000;
             --bg-panel: #111111;
@@ -143,11 +149,14 @@
 
         .btn-action { background: var(--neon-blue); color: #000; border: none; padding: 15px; font-weight: 900; font-family: 'Orbitron', monospace; letter-spacing: 2px; cursor: pointer; margin-top: 10px; transition: 0.3s; }
         .btn-action:hover { box-shadow: 0 0 15px var(--neon-blue); }
+        
+        .btn-small { background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 4px 10px; font-size: 0.75rem; cursor: pointer; transition: 0.2s; border-radius: 2px; font-family: 'Noto Sans KR', sans-serif; font-weight: bold; }
+        .btn-small:hover { background: var(--neon-blue); color: #000; }
 
         .preview-container { flex: 1; display: flex; align-items: center; justify-content: center; background: #000; padding: 40px; overflow: auto; }
         .canvas-wrapper { width: 800px; aspect-ratio: 1/1; position: relative; }
         
-        /* 캡처 영역 개선 (화질 깨짐 방지용 img 태그 사용) */
+        /* 캡처 영역 개선 */
         #capture-area { width: 100%; height: 100%; position: relative; overflow: hidden; }
         #bg-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
         #capture-content { position: relative; z-index: 2; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 80px; }
@@ -417,7 +426,10 @@
     <main id="view-log" class="view-section active">
         <aside class="sidebar">
             <div class="control-group">
-                <label>CONTENTS (내용)</label>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label>CONTENTS (내용)</label>
+                    <button type="button" class="btn-small" onclick="toggleQuotes()">" " ⇄ “ ”</button>
+                </div>
                 <textarea id="in-text" oninput="updatePreview()" onfocus="clearDefaultQuote(this)" onblur="restoreDefaultQuote(this)">“죽음은 뉴스가 아니고, 
 사람은 떠나지 않는다.”</textarea>
             </div>
@@ -471,6 +483,8 @@
                     <option value="'Pretendard', sans-serif">Pretendard</option>
                     <option value="'Gowun Dodum', sans-serif">고운돋움</option>
                     <option value="'Do Hyeon', sans-serif">도현 (굵은 제목형)</option>
+                    <option value="'KoPubDotum', sans-serif">KoPub 돋움</option>
+                    <option value="'KoPubBatang', serif">KoPub 바탕</option>
                 </select>
             </div>
             
@@ -580,6 +594,22 @@
                 updatePreview();
             }
         }
+        
+        /* Toggle Quotes Logic */
+        function toggleQuotes() {
+            let text = els.mainIn.value;
+            if (/["']/.test(text)) {
+                text = text.replace(/"([^"]*)"/g, '“$1”').replace(/'([^']*)'/g, '‘$1’');
+                if(!/[“”‘’]/.test(text)) text = text.replace(/"/g, '”').replace(/'/g, '’');
+            } else if (/[“”‘’]/.test(text)) {
+                text = text.replace(/“([^”]*)”/g, '"$1"').replace(/‘([^’]*)’/g, "'$1'");
+                if(!/["']/.test(text)) text = text.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
+            } else {
+                text = `“${text}”`;
+            }
+            els.mainIn.value = text;
+            updatePreview();
+        }
 
         /* Log Preview Logic */
         let state = { size: 32, lineHeight: 1.6, letterSpacing: -1.0, align: 'center' };
@@ -598,7 +628,7 @@
 
         function updateTheme() {
             const selected = els.themeIn.options[els.themeIn.selectedIndex];
-            els.bgImage.src = selected.value; // 배경 이미지 img src로 교체
+            els.bgImage.src = selected.value; 
             els.mainOut.style.color = selected.getAttribute('data-color');
             els.footer.style.color = selected.getAttribute('data-color');
         }
@@ -624,11 +654,18 @@
             
             // Align adjustments
             els.mainOut.style.textAlign = state.align;
-            els.footer.style.textAlign = state.align === 'justify' ? 'center' : state.align; 
 
-            if(state.align === 'left') els.captureContent.style.alignItems = 'flex-start';
-            else if(state.align === 'right') els.captureContent.style.alignItems = 'flex-end';
-            else els.captureContent.style.alignItems = 'center';
+            if (state.align === 'justify') {
+                els.footer.style.textAlign = 'left'; // 양쪽 정렬 시 푸터는 무조건 좌측 정렬되게 변경
+                els.footer.style.textAlignLast = 'auto'; 
+                els.captureContent.style.alignItems = 'stretch';
+            } else {
+                els.footer.style.textAlign = state.align;
+                els.footer.style.textAlignLast = 'auto'; 
+                if(state.align === 'left') els.captureContent.style.alignItems = 'flex-start';
+                else if(state.align === 'right') els.captureContent.style.alignItems = 'flex-end';
+                else els.captureContent.style.alignItems = 'center';
+            }
         }
 
         function downloadImage() {
