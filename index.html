@@ -146,9 +146,14 @@
 
         .preview-container { flex: 1; display: flex; align-items: center; justify-content: center; background: #000; padding: 40px; overflow: auto; }
         .canvas-wrapper { width: 800px; aspect-ratio: 1/1; position: relative; }
-        #capture-area { width: 100%; height: 100%; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 80px; position: relative; }
-        #display-main { white-space: pre-wrap; margin-bottom: 20px; text-align: center; word-break: keep-all; z-index: 2; color: #fff; width: 100%; }
-        .footer-area { position: relative; width: 100%; text-align: center; font-size: 0.85rem; letter-spacing: 2px; z-index: 2; font-family: 'Orbitron', 'Noto Sans KR', sans-serif; opacity: 0.8; }
+        
+        /* 캡처 영역 개선 (화질 깨짐 방지용 img 태그 사용) */
+        #capture-area { width: 100%; height: 100%; position: relative; overflow: hidden; }
+        #bg-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+        #capture-content { position: relative; z-index: 2; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 80px; }
+        
+        #display-main { white-space: pre-wrap; margin-bottom: 20px; text-align: center; word-break: keep-all; color: #fff; width: 100%; }
+        .footer-area { position: relative; width: 100%; text-align: center; font-size: 0.85rem; letter-spacing: 2px; font-family: 'Orbitron', 'Noto Sans KR', sans-serif; opacity: 0.8; }
         .footer-char { font-weight: 900; }
 
         /* 공통 하단 저작권 푸터 */
@@ -397,7 +402,7 @@
             <div class="grid-cards">
                 <div class="card" style="background:#111;">
                     <h4>■ INTRO</h4>
-                    <p>당신은 포트의 어느 부둣가에서 사인을 마주합니다.<br>어차피 스쳐 지나갈 인연인 줄만 알았건만, 가벼운 사건에 휘말릴 뻔한 당신을 그가 도와주면서 본격적인 인연이 시작됩니다.</p>
+                    <p>{{user}}는 포트의 어느 부둣가에서 사인을 마주합니다.<br>어차피 스쳐 지나갈 인연인 줄만 알았건만, 가벼운 사건에 휘말릴 뻔한 {{user}}를 그가 도와주면서 본격적인 인연이 시작됩니다.</p>
                 </div>
                 <div class="card" style="background:#111;">
                     <h4>■ CREATOR COMMENT</h4>
@@ -500,15 +505,21 @@
                 </div>
             </div>
             
-            <button class="btn-action" onclick="downloadImage()">> DOWNLOAD_IMG</button>
+            <div style="display: flex; gap: 10px; margin-top: 10px; width: 100%;">
+                <button class="btn-action" style="flex: 1;" id="btn-save" onclick="downloadImage()">> DOWNLOAD</button>
+                <button class="btn-action" style="flex: 1;" id="btn-copy" onclick="copyImage()">> COPY_IMG</button>
+            </div>
         </aside>
 
         <section class="preview-container">
             <div class="canvas-wrapper">
-                <div id="capture-area" style="background-image: url('COVE_A_BLUE.png');">
-                    <div id="display-main">“죽음은 뉴스가 아니고, <br>사람은 떠나지 않는다.”</div>
-                    <div class="footer-area" id="footer-area">
-                        COVE | <span class="footer-char" id="display-char">CHARACTER NAME</span>
+                <div id="capture-area">
+                    <img id="bg-image" src="COVE_A_BLUE.png" alt="background">
+                    <div id="capture-content">
+                        <div id="display-main">“죽음은 뉴스가 아니고, <br>사람은 떠나지 않는다.”</div>
+                        <div class="footer-area" id="footer-area">
+                            COVE | <span class="footer-char" id="display-char">CHARACTER NAME</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -576,7 +587,8 @@
             mainIn: document.getElementById('in-text'), charIn: document.getElementById('in-char'),
             themeIn: document.getElementById('in-theme'), fontIn: document.getElementById('in-font'),
             mainOut: document.getElementById('display-main'), charOut: document.getElementById('display-char'), 
-            capture: document.getElementById('capture-area'), footer: document.getElementById('footer-area')
+            capture: document.getElementById('capture-area'), footer: document.getElementById('footer-area'),
+            bgImage: document.getElementById('bg-image'), captureContent: document.getElementById('capture-content')
         };
 
         function updatePreview() {
@@ -586,7 +598,7 @@
 
         function updateTheme() {
             const selected = els.themeIn.options[els.themeIn.selectedIndex];
-            els.capture.style.backgroundImage = `url('${selected.value}')`;
+            els.bgImage.src = selected.value; // 배경 이미지 img src로 교체
             els.mainOut.style.color = selected.getAttribute('data-color');
             els.footer.style.color = selected.getAttribute('data-color');
         }
@@ -614,18 +626,63 @@
             els.mainOut.style.textAlign = state.align;
             els.footer.style.textAlign = state.align === 'justify' ? 'center' : state.align; 
 
-            if(state.align === 'left') els.capture.style.alignItems = 'flex-start';
-            else if(state.align === 'right') els.capture.style.alignItems = 'flex-end';
-            else els.capture.style.alignItems = 'center';
+            if(state.align === 'left') els.captureContent.style.alignItems = 'flex-start';
+            else if(state.align === 'right') els.captureContent.style.alignItems = 'flex-end';
+            else els.captureContent.style.alignItems = 'center';
         }
 
         function downloadImage() {
-            html2canvas(els.capture, { scale: 2, useCORS: true }).then(canvas => {
+            const btn = document.getElementById('btn-save');
+            btn.innerHTML = "> PROCESSING...";
+            btn.disabled = true;
+
+            html2canvas(els.capture, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `COVE_LOG_${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
+                btn.innerHTML = "> DOWNLOAD";
+                btn.disabled = false;
+            }).catch(err => {
+                alert("이미지 저장에 실패했습니다.");
+                btn.innerHTML = "> DOWNLOAD";
+                btn.disabled = false;
             });
+        }
+
+        function copyImage() {
+            const btn = document.getElementById('btn-copy');
+            btn.innerHTML = "> COPYING...";
+            btn.disabled = true;
+
+            html2canvas(els.capture, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
+                canvas.toBlob(blob => {
+                    if (!blob) {
+                        alert('이미지 복사에 실패했습니다.');
+                        resetCopyBtn(btn);
+                        return;
+                    }
+                    try {
+                        const item = new ClipboardItem({ 'image/png': blob });
+                        navigator.clipboard.write([item]).then(() => {
+                            btn.innerHTML = "> COPIED!";
+                            setTimeout(() => resetCopyBtn(btn), 2000);
+                        }).catch(err => {
+                            console.error(err);
+                            alert('클립보드 복사를 지원하지 않는 브라우저이거나 권한이 없습니다.');
+                            resetCopyBtn(btn);
+                        });
+                    } catch (err) {
+                        alert('클립보드 복사를 지원하지 않는 환경입니다.');
+                        resetCopyBtn(btn);
+                    }
+                }, 'image/png');
+            });
+        }
+
+        function resetCopyBtn(btn) {
+            btn.innerHTML = "> COPY_IMG";
+            btn.disabled = false;
         }
 
         updatePreview(); updateTheme(); updateTypography();
