@@ -114,8 +114,9 @@
         }
         .view-section.active { display: flex; }
 
-        #view-archive { padding: 40px; overflow-y: auto; justify-content: center; }
-        .archive-container { max-width: 1000px; width: 100%; margin: 0 auto; }
+        /* ====== WORLD VIEW ====== */
+        #view-world { padding: 40px; overflow-y: auto; justify-content: center; }
+        .world-container { max-width: 1000px; width: 100%; margin: 0 auto; }
         
         .lore-card {
             background: var(--bg-panel); border: 1px solid var(--border); border-left: 4px solid var(--neon-blue);
@@ -132,6 +133,38 @@
         .lore-card b { color: #fff; }
         .lore-card .tagline { color: var(--neon-blue); font-style: italic; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
 
+        /* ====== ROSTER VIEW ====== */
+        #view-roster { padding: 40px; overflow-y: auto; justify-content: center; }
+        .roster-container { max-width: 1000px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 30px; }
+        
+        .char-card {
+            background: var(--bg-panel); border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: flex; gap: 30px; padding: 30px;
+        }
+        .char-img-wrap {
+            flex-shrink: 0; width: 320px; border: 1px solid var(--neon-blue); background: #000;
+            display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
+        }
+        .char-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .char-info { flex: 1; display: flex; flex-direction: column; gap: 15px; }
+        .char-header h1 { font-family: 'Orbitron', sans-serif; color: var(--neon-blue); font-size: 2.2rem; letter-spacing: 4px; margin-bottom: 5px; text-transform: uppercase; }
+        .char-meta { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; color: var(--text-muted); border-bottom: 1px solid var(--border); padding-bottom: 10px; letter-spacing: 1px; }
+        
+        .char-quote { background: rgba(138, 180, 248, 0.05); border-left: 4px solid var(--neon-blue); padding: 15px; font-style: italic; color: #fff; font-weight: bold; }
+        
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+        .info-item { background: rgba(0,0,0,0.4); border: 1px solid var(--border); padding: 12px; }
+        .info-item label { display: block; color: var(--neon-blue); font-size: 0.75rem; margin-bottom: 5px; font-weight: bold; }
+        .info-item span { color: #eee; font-size: 0.95rem; font-weight: bold; }
+
+        .desc-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 10px; }
+        .desc-box { background: rgba(0,0,0,0.4); border: 1px solid var(--border); padding: 15px; }
+        .desc-box h3 { color: var(--neon-blue); font-size: 1rem; margin-bottom: 10px; border-bottom: 1px dashed var(--border); padding-bottom: 5px; font-family: 'Pretendard', sans-serif;}
+        .desc-box p { font-size: 0.9rem; line-height: 1.6; color: #ccc; }
+        .desc-box.highlight { border-color: var(--neon-blue); background: rgba(0, 243, 255, 0.03); }
+
+        /* ====== LOG VIEW ====== */
         .sidebar {
             width: 400px; background: var(--bg-panel); border-right: 1px solid var(--neon-blue);
             padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;
@@ -180,19 +213,20 @@
 <body>
     <div class="scanlines"></div>
     <div id="boot-screen">
-        <div class="boot-text" id="boot-text">> INITIATING COVE PROTOCOL...<br>> ESTABLISHING SECURE CONNECTION...<br>> DECRYPTING ARCHIVE...</div>
+        <div class="boot-text" id="boot-text">> INITIATING COVE PROTOCOL...<br>> ESTABLISHING SECURE CONNECTION...<br>> LOADING SYSTEM MODULES...</div>
     </div>
 
     <header>
         <div class="logo">⚓ COVE_SYS //</div>
         <div class="nav-buttons">
-            <button class="nav-btn active" onclick="switchView('archive')">ARCHIVE</button>
-            <button class="nav-btn" onclick="switchView('generator')">QUOTE MAKER</button>
+            <button class="nav-btn" onclick="switchView('world')">WORLD</button>
+            <button class="nav-btn" onclick="switchView('roster')">ROSTER</button>
+            <button class="nav-btn active" onclick="switchView('log')">LOG</button>
         </div>
     </header>
 
-    <main id="view-archive" class="view-section active">
-        <div class="archive-container">
+    <main id="view-world" class="view-section">
+        <div class="world-container">
             <div class="lore-card">
                 <h2>■ OVERVIEW: 개요</h2>
                 <p><b>코브(Cove)</b>는 국제 협약에 의해 지정된 이능력 감염자 격리 도시입니다.</p>
@@ -242,7 +276,59 @@
         </div>
     </main>
 
-    <main id="view-generator" class="view-section">
+    <main id="view-roster" class="view-section">
+        <div class="roster-container">
+            <div class="char-card">
+                <div class="char-img-wrap">
+                    <img src="https://i.imgur.com/VKMkemZ.png" alt="CHARACTER_IMAGE">
+                </div>
+                <div class="char-info">
+                    <div class="char-header">
+                        <h1>SIGN</h1>
+                        <div class="char-meta">CODE_NAME: SIGN // STATUS: ACTIVE // OFFICER_CLASS_A</div>
+                    </div>
+                    <div class="char-quote">“ 비켜. 다음 공무 수행하러 가야 해. ”</div>
+                    
+                    <div class="info-grid">
+                        <div class="info-item"><label>국적</label><span>독일 (1세대)</span></div>
+                        <div class="info-item"><label>소속 / 직급 / 등급</label><span>오피스 / 오피서 / A등급</span></div>
+                        <div class="info-item"><label>나이 / 성별</label><span>27세 / 남성</span></div>
+                        <div class="info-item"><label>신장</label><span>183cm</span></div>
+                        <div class="info-item"><label>상징 꽃</label><span>수레국화</span></div>
+                    </div>
+
+                    <div class="desc-section">
+                        <div class="desc-box">
+                            <h3>■ 외형 (Appearance)</h3>
+                            <p>회색빛이 도는 흑발에 새파란 푸른 눈을 가졌습니다.<br>수려한 인상의 미남이지만, 늘 피로에 찌들어 있고 표정 변화가 적어서 호감을 곧잘 깎습니다.</p>
+                        </div>
+                        <div class="desc-box">
+                            <h3>■ 성격 (Personality)</h3>
+                            <p>냉소적·통제 지향·감정 절제형 인간입니다. 폭주 가능성에 민감하며, 사람을 등급과 확률로 판단하는 경향이 있습니다.<br>겉으로는 건조하고 퉁명스러우나 행동은 책임 중심적입니다. 친해진다면 조금 챙겨 줄지도 모릅니다.</p>
+                        </div>
+                        <div class="desc-box highlight">
+                            <h3>■ ABILITY : Stamp (스탬프)</h3>
+                            <p>대상에게 <b>‘확정’</b>을 찍어 상태·행동·출력을 제한하거나 고정합니다. 이동 불가, 출력 제한, 발화 차단 등 조건을 명확히 지정해 적용 가능합니다. 행정적·제도적 통제에 특화되어 공무 수행에 활용합니다.</p>
+                        </div>
+                        <div class="desc-box highlight">
+                            <h3>■ COST (코스트)</h3>
+                            <p><b>기억 소실.</b><br>특히 감정이 얽힌 기억부터 흐려집니다.</p>
+                        </div>
+                        <div class="desc-box">
+                            <h3>■ INTRO</h3>
+                            <p>{{user}}는 포트의 어느 부둣가에서 사인을 마주합니다.<br>어차피 스쳐 지나갈 인연인 줄만 알았건만, 가벼운 사건에 휘말릴 뻔한 {{user}}를 그가 도와주면서 본격적인 인연이 시작됩니다.</p>
+                        </div>
+                        <div class="desc-box">
+                            <h3>■ COMMENT</h3>
+                            <p>언제나 공무 수행에 찌들어 있는, 피곤한 샐러리맨입니다. 처음엔 상당히 무신경하고 거리를 두지만, 마음을 연다면 츤데레가 될 수 있어요.<br><br><i>⚓ 대화 시, 사인은 상당히 무심해서 접점을 만드는 것이 영 쉽지 않을 수 있습니다. 그럴 때는 OOC를 적극 활용해 보시는 쪽도 추천드려요!</i></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+    </main>
+
+    <main id="view-log" class="view-section active">
         <aside class="sidebar">
             <div class="control-group">
                 <textarea id="in-text" oninput="updatePreview()">“죽음은 뉴스가 아니고, 
@@ -319,6 +405,7 @@
             const bootText = document.getElementById('boot-text');
             bootText.innerHTML = "> ACCESS GRANTED.<br>> WELCOME TO COVE.";
             setTimeout(() => document.getElementById('boot-screen').style.opacity = '0', 800);
+            setTimeout(() => document.getElementById('boot-screen').style.display = 'none', 1300);
         }, 1500);
 
         function switchView(viewName) {
@@ -362,7 +449,7 @@
         function downloadImage() {
             html2canvas(els.capture, { scale: 2, useCORS: true }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = `COVE_ARCHIVE_${Date.now()}.png`;
+                link.download = `COVE_LOG_${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
