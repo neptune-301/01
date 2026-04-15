@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COVE: SYSTEM TERMINAL</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;700&family=Nanum+Myeongjo:wght@400;700&family=Orbitron:wght@400;700;900&family=Gowun+Dodum&family=Do+Hyeon&family=Hahmlet:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Noto+Serif+KR:wght@300;400;700&family=Nanum+Myeongjo:wght@400;700&family=Orbitron:wght@400;700;900&family=Gowun+Dodum&family=Do+Hyeon&family=Hahmlet:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
@@ -22,7 +22,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+            font-family: 'Noto Sans KR', 'Pretendard', sans-serif;
             background-color: var(--bg-base);
             color: var(--text-main);
             height: 100vh;
@@ -35,7 +35,6 @@
             background-size: 30px 30px;
         }
 
-        /* CRT Scanline Overlay */
         .scanlines {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -45,12 +44,10 @@
             z-index: 999;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: var(--bg-base); }
         ::-webkit-scrollbar-thumb { background: var(--neon-blue); box-shadow: 0 0 5px var(--neon-blue); }
 
-        /* BOOT SEQUENCE ANIMATION */
         #boot-screen {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -75,7 +72,6 @@
             100% { transform: translate(0) }
         }
 
-        /* HEADER / NAVIGATION */
         header {
             display: flex;
             justify-content: space-between;
@@ -123,7 +119,6 @@
         }
         .nav-btn.active::before, .nav-btn:hover::before { left: 0; }
 
-        /* VIEW CONTAINERS */
         .view-section {
             display: none;
             flex: 1;
@@ -133,7 +128,6 @@
         .view-section.active { display: flex; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ====== ARCHIVE VIEW ====== */
         #view-archive {
             padding: 40px;
             overflow-y: auto;
@@ -167,7 +161,6 @@
         .lore-card p { margin-bottom: 12px; line-height: 1.7; font-size: 0.95rem; }
         .lore-card b { color: #fff; }
 
-        /* ====== GENERATOR VIEW ====== */
         .sidebar {
             width: 400px;
             background: var(--bg-panel);
@@ -207,7 +200,6 @@
         }
         .btn-small:hover { background: var(--neon-blue); color: #000; }
 
-        /* Toggle & Adjusters */
         .btn-group { display: flex; gap: 5px; width: 100%; }
         .toggle-btn {
             flex: 1; background: transparent; border: 1px solid var(--border); color: var(--text-muted);
@@ -233,7 +225,6 @@
         }
         .btn-action:hover { box-shadow: 0 0 20px var(--neon-blue); transform: translateY(-2px); }
 
-        /* Preview Canvas Area */
         .preview-container {
             flex: 1; display: flex; align-items: center; justify-content: center;
             background: transparent; padding: 40px; position: relative; overflow: auto;
@@ -247,15 +238,16 @@
             width: 100%; height: 100%;
             background-size: cover; background-position: center;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            padding: 100px; position: relative;
+            padding: 80px; position: relative;
         }
         #display-main {
-            white-space: pre-wrap; margin-bottom: 50px; text-align: center; word-break: keep-all;
+            white-space: pre-wrap; margin-bottom: 20px; text-align: center; word-break: keep-all;
             z-index: 2; color: #fff;
         }
         .footer-area {
-            position: absolute; bottom: 60px; width: 100%; text-align: center;
-            font-size: 0.9rem; letter-spacing: 2px; z-index: 2; font-family: 'Orbitron', 'Pretendard', sans-serif;
+            position: relative; width: 100%; text-align: center;
+            font-size: 0.85rem; letter-spacing: 2px; z-index: 2; font-family: 'Orbitron', 'Noto Sans KR', sans-serif;
+            opacity: 0.8;
         }
         .footer-world { font-weight: 300; }
         .footer-char { font-weight: 900; }
@@ -298,21 +290,10 @@
                 <p>코브에는 비능력자가 존재하지 않습니다.</p>
             </div>
 
-            <div class="lore-card danger">
-                <h2>■ SYSTEM: 코스트와 폭주</h2>
-                <p>능력 사용 시 반드시 <b>코스트(Cost)</b>가 발생합니다. 환청, 편두통, 감정 결손 등 다양한 형태로 나타나며 주기적인 방출이 필요합니다.</p>
-                <p><b>폭주</b>는 제한이 붕괴된 상태입니다.</p>
-                <p>- <b>제압 (Suppression):</b> 물리적 강제 리셋 (센터 주도)</p>
-                <p>- <b>고정 (Fixation):</b> 감정 기반 안정화 (스킨십 등)</p>
-                <p>- <b>앵커 (Anchor):</b> 고정을 수행하는 등록된 파트너</p>
-            </div>
-
             <div class="lore-card">
-                <h2>■ ORGANIZATIONS: 네 조직</h2>
+                <h2>■ ORGANIZATIONS: 주요 조직</h2>
                 <p><b>[OFFICE] 오피스:</b> 실질 통치 집단. 질서 유지, 출국 승인, 대외 협상. (디렉터 > 카운슬러 > 오피서 > 스탭)</p>
-                <p><b>[CENTER] 센터:</b> 실행 조직. 채권 회수, 강제 집행, 폭주 제압. (헤드 > 캡틴 > 오퍼레이터 > 트레이니)</p>
-                <p><b>[CLINIC] 클리닉:</b> 의료 조직. 코스트 완화 기술 및 약물 독점. (치프 > 닥터 > 어시스트)</p>
-                <p><b>[GARDEN] 가든:</b> 중립 정보 거래소 및 장례 주관. 꽃을 통한 정보 거래.</p>
+                <p><b>[CLINIC] 클리닉:</b> 의료 조직. 흔적 발현 완화 기술 및 약물 독점. (치프 > 닥터 > 어시스트)</p>
             </div>
             
             <div class="lore-card">
@@ -341,47 +322,47 @@
             <div class="control-group">
                 <label>ENVIRONMENT (배경 테마)</label>
                 <select id="in-theme" onchange="updateTheme()">
-    <optgroup label="TYPE A">
-        <option value="COVE_A_BLUE.png" data-color="#ffffff">A - BLUE</option>
-        <option value="COVE_A_GREEN.png" data-color="#ffffff">A - GREEN</option>
-        <option value="COVE_A_PINK.png" data-color="#ffffff">A - PINK</option>
-        <option value="COVE_A_RED.png" data-color="#ffffff">A - RED</option>
-        <option value="COVE_A_VIOLET.png" data-color="#ffffff">A - VIOLET</option>
-        <option value="COVE_A_YELLOW.png" data-color="#ffffff">A - YELLOW</option>
-    </optgroup>
-
-    <optgroup label="TYPE B">
-        <option value="COVE_B_BLUE.png" data-color="#ffffff">B - BLUE</option>
-        <option value="COVE_B_GREEN.png" data-color="#ffffff">B - GREEN</option>
-        <option value="COVE_B_PINK.png" data-color="#ffffff">B - PINK</option>
-        <option value="COVE_B_RED.png" data-color="#ffffff">B - RED</option>
-        <option value="COVE_B_VIOLET.png" data-color="#ffffff">B - VIOLET</option>
-        <option value="COVE_B_YELLOW.png" data-color="#ffffff">B - YELLOW</option>
-    </optgroup>
-
-    <optgroup label="TYPE C">
-        <option value="COVE_C_BLACK.png" data-color="#ffffff">C - BLACK</option>
-        <option value="COVE_C_WHITE.png" data-color="#121215">C - WHITE</option>
-        <option value="COVE_C_BLUE_B.png" data-color="#ffffff">C - BLUE (Dark)</option>
-        <option value="COVE_C_BLUE_W.png" data-color="#121215">C - BLUE (Light)</option>
-        <option value="COVE_C_GREEN_B.png" data-color="#ffffff">C - GREEN (Dark)</option>
-        <option value="COVE_C_GREEN_W.png" data-color="#121215">C - GREEN (Light)</option>
-        <option value="COVE_C_RED_B.png" data-color="#ffffff">C - RED (Dark)</option>
-        <option value="COVE_C_RED_W.png" data-color="#121215">C - RED (Light)</option>
-        <option value="COVE_C_VIOLET_B.png" data-color="#ffffff">C - VIOLET (Dark)</option>
-        <option value="COVE_C_VIOLET_W.png" data-color="#121215">C - VIOLET (Light)</option>
-        <option value="COVE_C_YELLOW_B.png" data-color="#ffffff">C - YELLOW (Dark)</option>
-        <option value="COVE_C_YELLOW_W.png" data-color="#121215">C - YELLOW (Light)</option>
-    </optgroup>
-</select>
+                    <optgroup label="TYPE A">
+                        <option value="COVE_A_BLUE.png" data-color="#ffffff">A - BLUE</option>
+                        <option value="COVE_A_GREEN.png" data-color="#ffffff">A - GREEN</option>
+                        <option value="COVE_A_PINK.png" data-color="#ffffff">A - PINK</option>
+                        <option value="COVE_A_RED.png" data-color="#ffffff">A - RED</option>
+                        <option value="COVE_A_VIOLET.png" data-color="#ffffff">A - VIOLET</option>
+                        <option value="COVE_A_YELLOW.png" data-color="#ffffff">A - YELLOW</option>
+                    </optgroup>
+                    <optgroup label="TYPE B">
+                        <option value="COVE_B_BLUE.png" data-color="#ffffff">B - BLUE</option>
+                        <option value="COVE_B_GREEN.png" data-color="#ffffff">B - GREEN</option>
+                        <option value="COVE_B_PINK.png" data-color="#ffffff">B - PINK</option>
+                        <option value="COVE_B_RED.png" data-color="#ffffff">B - RED</option>
+                        <option value="COVE_B_VIOLET.png" data-color="#ffffff">B - VIOLET</option>
+                        <option value="COVE_B_YELLOW.png" data-color="#ffffff">B - YELLOW</option>
+                    </optgroup>
+                    <optgroup label="TYPE C">
+                        <option value="COVE_C_BLACK.png" data-color="#ffffff">C - BLACK</option>
+                        <option value="COVE_C_WHITE.png" data-color="#121215">C - WHITE</option>
+                        <option value="COVE_C_BLUE_B.png" data-color="#ffffff">C - BLUE (Dark)</option>
+                        <option value="COVE_C_BLUE_W.png" data-color="#121215">C - BLUE (Light)</option>
+                        <option value="COVE_C_GREEN_B.png" data-color="#ffffff">C - GREEN (Dark)</option>
+                        <option value="COVE_C_GREEN_W.png" data-color="#121215">C - GREEN (Light)</option>
+                        <option value="COVE_C_RED_B.png" data-color="#ffffff">C - RED (Dark)</option>
+                        <option value="COVE_C_RED_W.png" data-color="#121215">C - RED (Light)</option>
+                        <option value="COVE_C_VIOLET_B.png" data-color="#ffffff">C - VIOLET (Dark)</option>
+                        <option value="COVE_C_VIOLET_W.png" data-color="#121215">C - VIOLET (Light)</option>
+                        <option value="COVE_C_YELLOW_B.png" data-color="#ffffff">C - YELLOW (Dark)</option>
+                        <option value="COVE_C_YELLOW_W.png" data-color="#121215">C - YELLOW (Light)</option>
+                    </optgroup>
+                </select>
+            </div>
 
             <div class="control-group">
                 <label>TYPOGRAPHY (서체)</label>
                 <select id="in-font" onchange="updateTypography()">
-                    <option value="'Noto Serif KR', serif" selected>Noto Serif (명조 기본)</option>
+                    <option value="'Noto Sans KR', sans-serif" selected>Noto Sans (기본 고딕)</option>
+                    <option value="'Noto Serif KR', serif">Noto Serif (명조)</option>
                     <option value="'Nanum Myeongjo', serif">나눔명조</option>
                     <option value="'Hahmlet', serif">함초롬바탕 (Hahmlet)</option>
-                    <option value="'Pretendard', sans-serif">Pretendard (고딕)</option>
+                    <option value="'Pretendard', sans-serif">Pretendard</option>
                     <option value="'Gowun Dodum', sans-serif">고운돋움</option>
                     <option value="'Do Hyeon', sans-serif">도현 (굵은 제목형)</option>
                 </select>
@@ -409,7 +390,7 @@
                 <label>SIZE (크기)</label>
                 <div class="number-adjust">
                     <button onclick="adjustVal('size', -2)">-</button>
-                    <span id="val-size">40</span>
+                    <span id="val-size">32</span>
                     <button onclick="adjustVal('size', 2)">+</button>
                 </div>
             </div>
@@ -425,7 +406,7 @@
                 <label>SPACING (자간)</label>
                 <div class="number-adjust">
                     <button onclick="adjustVal('letterSpacing', -0.5)">-</button>
-                    <span id="val-letterSpacing">0.0</span>
+                    <span id="val-letterSpacing">-1.0</span>
                     <button onclick="adjustVal('letterSpacing', 0.5)">+</button>
                 </div>
             </div>
@@ -435,7 +416,7 @@
 
         <section class="preview-container">
             <div class="canvas-wrapper">
-                <div id="capture-area" style="background-image: url('KakaoTalk_20260415_203431641_02.png');">
+                <div id="capture-area" style="background-image: url('COVE_A_BLUE.png');">
                     <div id="display-main">“ 죽음은 뉴스가 아니고, <br>사람은 떠나지 않는다. ”</div>
                     <div class="footer-area" id="footer-area">
                         <span class="footer-world">COVE</span> | <span class="footer-char" id="display-char">CHARACTER NAME</span>
@@ -446,7 +427,6 @@
     </main>
 
     <script>
-        // --- BOOT SEQUENCE LOGIC ---
         setTimeout(() => {
             const bootText = document.getElementById('boot-text');
             bootText.innerHTML = "> ACCESS GRANTED.<br>> WELCOME TO COVE.";
@@ -457,7 +437,6 @@
             }, 800);
         }, 1500);
 
-        // --- NAVIGATION LOGIC ---
         function switchView(viewName) {
             document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -466,8 +445,7 @@
             event.currentTarget.classList.add('active');
         }
 
-        // --- GENERATOR LOGIC ---
-        let state = { size: 40, lineHeight: 1.6, letterSpacing: 0, align: 'center', wrap: 'keep-all' };
+        let state = { size: 32, lineHeight: 1.6, letterSpacing: -1.0, align: 'center', wrap: 'keep-all' };
         
         const els = {
             mainIn: document.getElementById('in-text'),
@@ -543,6 +521,8 @@
             if(state.align === 'left') els.capture.style.alignItems = 'flex-start';
             else if(state.align === 'right') els.capture.style.alignItems = 'flex-end';
             else els.capture.style.alignItems = 'center';
+            
+            els.footerArea.style.textAlign = state.align;
         }
 
         function downloadImage() {
@@ -559,13 +539,12 @@
                 btn.innerHTML = "> DOWNLOAD_IMG";
                 btn.disabled = false;
             }).catch(err => {
-                alert("이미지 저장 실패. 배경 이미지가 동일 폴더에 있는지 확인하세요.");
+                alert("이미지 저장 실패. 이미지가 동일 폴더에 있는지 확인하세요.");
                 btn.innerHTML = "> DOWNLOAD_IMG";
                 btn.disabled = false;
             });
         }
 
-        // Initialize
         updatePreview();
         updateTheme();
         updateTypography();
