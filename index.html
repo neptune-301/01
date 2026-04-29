@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>⚓COVE: THE ISOLATED</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,7 +33,9 @@
             font-family: 'Noto Sans KR', 'Pretendard', sans-serif;
             background-color: var(--bg-base);
             color: var(--text-main);
-            height: 100vh;
+            /* 모바일 최적화: dvh 사용 */
+            height: 100vh; 
+            height: 100dvh;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -44,9 +46,11 @@
         }
 
         .scanlines {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
             background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
-            background-size: 100% 4px; pointer-events: none; z-index: 999;
+            background-size: 100% 4px;
+            pointer-events: none; z-index: 999;
         }
 
         ::-webkit-scrollbar { width: 5px; }
@@ -54,32 +58,38 @@
         ::-webkit-scrollbar-thumb { background: var(--neon-blue); }
 
         #boot-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: #000; z-index: 10000; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; font-family: 'Orbitron', monospace;
+            justify-content: center; align-items: center;
+            font-family: 'Orbitron', monospace;
             color: var(--neon-blue); transition: opacity 0.5s ease-out;
         }
         .boot-text { font-size: 1.2rem; text-shadow: 0 0 10px var(--neon-blue); line-height: 2; text-align: center;}
 
         header {
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex;
+            justify-content: space-between; align-items: center;
             padding: 15px 40px; border-bottom: 2px solid var(--neon-blue);
             background: var(--bg-panel); z-index: 10;
         }
 
         .logo {
-            font-family: 'Orbitron', monospace; font-size: 1.5rem; font-weight: 900;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem; font-weight: 900;
             color: var(--neon-blue); letter-spacing: 2px;
         }
 
         .nav-buttons { display: flex; gap: 15px; }
         .nav-btn {
-            font-family: 'Orbitron', monospace; background: transparent;
+            font-family: 'Orbitron', monospace;
+            background: transparent;
             border: 1px solid var(--border-light); color: var(--text-muted);
             padding: 8px 20px; font-size: 0.9rem; letter-spacing: 2px; cursor: pointer; transition: all 0.3s;
         }
         .nav-btn.active, .nav-btn:hover {
-            border-color: var(--neon-blue); color: var(--neon-blue); background: var(--neon-dim);
+            border-color: var(--neon-blue);
+            color: var(--neon-blue); background: var(--neon-dim);
         }
 
         .view-section { display: none; flex: 1; overflow-y: auto; animation: fadeIn 0.4s ease-out; padding: 40px; }
@@ -154,7 +164,9 @@
         .btn-small:hover { background: var(--neon-blue); color: #000; }
 
         .preview-container { flex: 1; display: flex; align-items: center; justify-content: center; background: #000; padding: 40px; overflow: auto; }
-        .canvas-wrapper { width: 800px; aspect-ratio: 1/1; position: relative; }
+        
+        /* 캔버스 래퍼 반응형 수정 */
+        .canvas-wrapper { width: 100%; max-width: 800px; aspect-ratio: 1/1; position: relative; }
         
         /* 캡처 영역 개선 */
         #capture-area { width: 100%; height: 100%; position: relative; overflow: hidden; }
@@ -168,11 +180,21 @@
         /* 공통 하단 저작권 푸터 */
         .page-footer { margin-top: 50px; margin-bottom: 30px; font-size: 11px; color: #555; text-align: right; letter-spacing: 1px; font-family: 'Orbitron', monospace; }
 
+        /* ====== 모바일 최적화 (Media Queries) ====== */
         @media (max-width: 768px) {
+            header { flex-direction: column; gap: 15px; padding: 15px 20px; }
+            .view-section { padding: 20px; }
             .grid-cards { grid-template-columns: 1fr; }
             .w-banner { flex-direction: column; }
-            #view-log { flex-direction: column; }
-            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-light); }
+            .w-title { font-size: 20px; }
+            
+            /* LOG 화면 모바일 레이아웃 조정 */
+            #view-log { flex-direction: column; overflow-y: auto; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-light); padding: 20px; }
+            .preview-container { padding: 20px; min-height: 400px; }
+            
+            /* 모바일에서 캡처 컨텐츠 패딩 대폭 축소 */
+            #capture-content { padding: 30px; }
         }
     </style>
 </head>
@@ -341,7 +363,7 @@
                             <span style="font-size:14px; color:#ccc; line-height:1.6; display:block;">추모 꽃을 판매하는 공간이자 <b style="color:var(--neon-blue);">중립 정보 거래소</b>입니다. ‘오늘의 꽃’을 구매하는 것은 정보 거래 의사를 표현하는 신호입니다. 가든은 편을 들지 않지만, 대부분의 사실을 알고 있습니다.<br>코브에는 <b style="color:var(--neon-blue);">장례식</b>이 없으며, 하루 동안 고인이 좋아하던 꽃을 지니고 있다가 하루 끝에 태우는 문화가 존재하며, 이것을 가든이 주관합니다.<br>조직 내 간부 인력은 <b style="color:var(--neon-blue);">키퍼</b>, 나머지는 <b style="color:var(--neon-blue);">텐더</b>라고 불립니다.</span>
                         </div>
                     </div>
-                </div>
+                 </div>
             </div>
 
             <div class="page-footer">COVE ⓒ 2026 · All rights reserved</div>
@@ -385,7 +407,7 @@
                 <div class="stat-box"><label>상징 꽃</label><span>수레국화</span></div>
             </div>
 
-            <div class="grid-cards">
+             <div class="grid-cards">
                 <div class="card">
                     <h4>■ 외형 (Appearance)</h4>
                     <p>회색빛이 도는 흑발에 새파란 푸른 눈을 가졌습니다. 수려한 인상의 미남이지만, 늘 피로에 찌들어 있고 표정 변화가 적어서 호감을 곧잘 깎습니다.</p>
@@ -507,14 +529,14 @@
             
             <div class="control-group">
                 <label>LINE HEIGHT (줄 간격)</label>
-                <div class="number-adjust">
+                 <div class="number-adjust">
                     <button onclick="adjustVal('lineHeight', -0.1)">-</button><span id="val-lineHeight">1.6</span><button onclick="adjustVal('lineHeight', 0.1)">+</button>
                 </div>
             </div>
 
             <div class="control-group">
                 <label>SPACING (자간)</label>
-                <div class="number-adjust">
+                 <div class="number-adjust">
                     <button onclick="adjustVal('letterSpacing', -0.5)">-</button><span id="val-letterSpacing">-1.0</span><button onclick="adjustVal('letterSpacing', 0.5)">+</button>
                 </div>
             </div>
@@ -527,7 +549,7 @@
 
         <section class="preview-container">
             <div class="canvas-wrapper">
-                <div id="capture-area">
+                 <div id="capture-area">
                     <img id="bg-image" src="COVE_A_BLUE.png" alt="background">
                     <div id="capture-content">
                         <div id="display-main">“죽음은 뉴스가 아니고, <br>사람은 떠나지 않는다.”</div>
@@ -535,7 +557,7 @@
                             COVE | <span class="footer-char" id="display-char">CHARACTER NAME</span>
                         </div>
                     </div>
-                </div>
+                 </div>
             </div>
         </section>
     </main>
@@ -607,7 +629,7 @@
             } else {
                 text = `“${text}”`;
             }
-            els.mainIn.value = text;
+             els.mainIn.value = text;
             updatePreview();
         }
 
@@ -620,7 +642,7 @@
             capture: document.getElementById('capture-area'), footer: document.getElementById('footer-area'),
             bgImage: document.getElementById('bg-image'), captureContent: document.getElementById('capture-content')
         };
-
+        
         function updatePreview() {
             els.mainOut.innerHTML = els.mainIn.value.replace(/\n/g, '<br>');
             els.charOut.textContent = els.charIn.value.trim() || 'CHARACTER NAME';
@@ -654,10 +676,10 @@
             
             // Align adjustments
             els.mainOut.style.textAlign = state.align;
-
             if (state.align === 'justify') {
-                els.footer.style.textAlign = 'left'; // 양쪽 정렬 시 푸터는 무조건 좌측 정렬되게 변경
-                els.footer.style.textAlignLast = 'auto'; 
+                els.footer.style.textAlign = 'left';
+                // 양쪽 정렬 시 푸터는 무조건 좌측 정렬되게 변경
+                els.footer.style.textAlignLast = 'auto';
                 els.captureContent.style.alignItems = 'stretch';
             } else {
                 els.footer.style.textAlign = state.align;
@@ -678,6 +700,7 @@
                 link.download = `COVE_LOG_${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
+            
                 btn.innerHTML = "> DOWNLOAD";
                 btn.disabled = false;
             }).catch(err => {
