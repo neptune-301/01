@@ -180,11 +180,11 @@
             .w-banner-img, .w-banner-text { min-width: auto; width: 100%; flex: 1 1 auto; }
             .w-title { font-size: 20px; }
             
-            #view-log { flex-direction: column; overflow-y: auto; }
-            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-light); padding: 20px; }
-            .preview-container { padding: 20px; min-height: 400px; align-items: center; }
-            .canvas-wrapper { width: 75%; max-width: 320px; margin: 0 auto; }
-            #capture-content { padding: 30px; }
+            #view-log { flex-direction: column; padding: 0; overflow: hidden; }
+            .sidebar { width: 100%; flex: 7; border-right: none; border-bottom: 1px solid var(--border-light); padding: 20px; overflow-y: auto; }
+            .preview-container { width: 100%; flex: 3; min-height: 0; padding: 10px 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+            .canvas-wrapper { width: auto; height: 100%; max-height: 100%; aspect-ratio: 1/1; margin: 0 auto; }
+            #capture-content { padding: 15px; }
         }
     </style>
 </head>
